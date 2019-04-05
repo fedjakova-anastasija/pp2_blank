@@ -25,18 +25,32 @@ void ShowStatistics(CBank* bank)
 	std::cout << "Customer balance: " << GetCustomerBalance(bank) << std::endl;
 }
 
+void ShowUsage() 
+{
+	std::cout << "Usage: PP2.exe <clients> <primitive>" << std::endl;
+	std::cout << "Arguments must be numbers" << std::endl;
+}
+
 int main(int argc, char* argv[])
 {
-	CBank* bank = new CBank();
-	//CBankClient* client1 = bank->CreateClient();
-	//CBankClient* client2 = bank->CreateClient();
-
 	int classInstancesNumber = 2;
-	if (argc == 2)
+	SynchPrimitive primitiveKind = SynchPrimitive::Mutex;
+
+	if (argc == 3)
 	{
-		int strToInt = atoi(argv[1]);
-		classInstancesNumber = strToInt;
+		int strToIntClient = atoi(argv[1]);
+		int strToIntPrimitive = atoi(argv[2]);
+
+		primitiveKind = (SynchPrimitive)strToIntPrimitive;
+		classInstancesNumber = strToIntClient;
 	}
+	else
+	{
+		ShowUsage();
+		return 1;
+	}
+
+	CBank* bank = new CBank(primitiveKind);
 
 	for (int i = 0; i < classInstancesNumber; i++)
 	{
